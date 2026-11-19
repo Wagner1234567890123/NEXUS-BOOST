@@ -26,6 +26,8 @@ interface FloatingBubbleOverlayProps {
   onSelectFps: (fps: FpsOption) => void;
   onCleanMemory: () => void;
   onDeactivateBoost: () => void;
+  onHideBubble?: () => void;
+  onOpenProfiles?: () => void;
 }
 
 const QUICK_FPS_OPTIONS: FpsOption[] = [60, 90, 120, 144, 240];
@@ -40,6 +42,8 @@ export const FloatingBubbleOverlay: React.FC<FloatingBubbleOverlayProps> = ({
   onSelectFps,
   onCleanMemory,
   onDeactivateBoost,
+  onHideBubble,
+  onOpenProfiles,
 }) => {
   const [panelOpen, setPanelOpen] = useState(false);
   const [pos, setPos] = useState<{ x: number; y: number }>(() => ({
