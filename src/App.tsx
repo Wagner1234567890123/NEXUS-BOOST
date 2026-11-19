@@ -267,6 +267,7 @@ export default function App() {
   };
 
   const handleTogglePerformanceFlagOld = (key: keyof PerformanceFlags) => {
+    setSettings((prev) => ({
       ...prev,
       performanceFlags: {
         ...prev.performanceFlags,
