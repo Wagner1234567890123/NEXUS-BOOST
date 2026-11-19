@@ -7,7 +7,7 @@ name: Build Android APK
 
 on:
   push:
-    branches: [max-performance]
+    branches: [max-performance, appjet]
     paths:
       - 'src/**'
       - 'android/**'
