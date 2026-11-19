@@ -79,8 +79,16 @@ jobs:
       - name: Build web (dist)
         run: npm run build
 
-      - name: Sincronizar Capacitor (android)
-        run: npx cap sync android
+      - name: Copiar build web para o app Android
+        run: |
+          set -e
+          rm -rf android/app/src/main/assets/public
+          mkdir -p android/app/src/main/assets/public
+          cp -r dist/. android/app/src/main/assets/public/
+          cat > android/app/src/main/assets/capacitor.config.json <<'JSON'
+          {"appId":"com.maxperformance.nexus","appName":"MAX PERFORMANCE","webDir":"dist","server":{"androidScheme":"https"}}
+          JSON
+          echo "assets copiados: $(find android/app/src/main/assets/public -type f | wc -l) arquivos"
 
       - name: Permissão do Gradle
         run: chmod +x android/gradlew
