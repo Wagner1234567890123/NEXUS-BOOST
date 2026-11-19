@@ -18,4 +18,4 @@ EXPOSE 3000
 RUN mkdir -p /app /home/appjet && chown -R 10001:10001 /app /home/appjet
 ENV HOME=/home/appjet
 USER 10001:10001
-CMD ["node","server.js"]
+CMD ["node","server.cjs"]
