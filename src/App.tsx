@@ -230,7 +230,43 @@ export default function App() {
     showToast(`Sensibilidade calibrada para ${BRAND_METADATA[settings.selectedBrand].label}!`);
   };
 
-  const handleTogglePerformanceFlag = (key: keyof PerformanceFlags) => {    setSettings((prev) => ({
+  const handleApplyProfile = (model: PhoneModelProfile, profile: SensitivityProfile) => {
+    setSettings((prev) => ({
+      ...prev,
+      detectedDeviceLabel: model.model,
+      selectedBrand: model.brand,
+      selectedModelId: model.id,
+      activeProfileId: profile.id,
+      sensitivity: { ...profile.sensitivity },
+    }));
+    showToast(`Perfil ${profile.name} aplicado · ${model.model} (DPI ${profile.dpi})`);
+  };
+
+  const handleToggleBubble = () => {
+    setSettings((prev) => {
+      const next = !prev.bubbleEnabled;
+      showToast(
+        next
+          ? 'Bolinha flutuante ativada — fica por cima do jogo.'
+          : 'Bolinha flutuante ocultada.'
+      );
+      return { ...prev, bubbleEnabled: next };
+    });
+  };
+
+  const handleToggleSlowWalk = () => {
+    setSettings((prev) => ({ ...prev, slowWalkEnabled: !prev.slowWalkEnabled }));
+  };
+
+  const handleToggleEconomy = () => {
+    setSettings((prev) => ({ ...prev, economyMode: !prev.economyMode }));
+  };
+
+  const handleToggleGpu = () => {
+    setSettings((prev) => ({ ...prev, gpuHighPerf: !prev.gpuHighPerf }));
+  };
+
+  const handleTogglePerformanceFlagOld = (key: keyof PerformanceFlags) => {
       ...prev,
       performanceFlags: {
         ...prev.performanceFlags,
