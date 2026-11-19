@@ -21,6 +21,9 @@ export type MoreActionId =
 interface MoreFunctionsScreenProps {
   economyMode: boolean;
   gpuHighPerf: boolean;
+  bubbleEnabled?: boolean;
+  onToggleBubble?: () => void;
+  onOpenProfiles?: () => void;
   onRunAction: (action: MoreActionId) => void;
   onOpenPremium: () => void;
   onClearGameData: () => void;

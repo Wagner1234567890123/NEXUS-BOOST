@@ -356,6 +356,21 @@ export const FloatingBubbleOverlay: React.FC<FloatingBubbleOverlayProps> = ({
             ))}
           </div>
 
+          {/* Perfis por modelo */}
+          {onOpenProfiles && (
+            <button
+              type="button"
+              onClick={() => {
+                setPanelOpen(false);
+                onOpenProfiles();
+              }}
+              className="mb-1.5 w-full rounded-xl py-1.5 px-2 bg-red-950/60 border border-red-600/80 hover:bg-red-900/80 text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <Crosshair className="w-3.5 h-3.5 text-red-300" />
+              <span>Perfis por Marca/Modelo</span>
+            </button>
+          )}
+
           {/* Quick Actions */}
           <div className="grid grid-cols-2 gap-1.5">
             <button
@@ -379,6 +394,20 @@ export const FloatingBubbleOverlay: React.FC<FloatingBubbleOverlayProps> = ({
               <span>Desativar</span>
             </button>
           </div>
+
+          {onHideBubble && (
+            <button
+              type="button"
+              onClick={() => {
+                setPanelOpen(false);
+                onHideBubble();
+              }}
+              className="mt-1.5 w-full rounded-xl py-1.5 px-2 bg-black/70 border border-red-700/80 hover:border-red-400 text-[11px] font-bold text-white/85 flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Ocultar Bolinha</span>
+            </button>
+          )}
 
           {supportsDocPip && (
             <button
