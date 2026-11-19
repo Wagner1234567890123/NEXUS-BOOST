@@ -1,0 +1,8 @@
+// Configuração Java do módulo app (equivalente ao capacitor.build.gradle gerado pelo CLI).
+// Mantido no repositório para o build do APK no GitHub Actions não depender de `npx cap sync`.
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+}
