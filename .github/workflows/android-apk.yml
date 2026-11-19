@@ -1,9 +1,11 @@
 name: Build Android APK
 
-# Gera o APK do MAX PERFORMANCE (Capacitor + overlay nativo).
-# Rode pela aba Actions -> "Build Android APK" -> Run workflow,
-# ou automaticamente a cada push na branch max-performance.
-# O APK fica em Artifacts -> MAX-PERFORMANCE-debug-apk.
+# Compila o APK do MAX PERFORMANCE (Capacitor + overlay nativo) e publica
+# o arquivo para download em dois lugares:
+#   1) Release fixo "apk-latest"  -> link direto .apk
+#   2) Artifacts -> MAX-PERFORMANCE-debug-apk
+#
+# Como gerar: aba Actions -> "Build Android APK" -> Run workflow.
 
 on:
   push:
@@ -18,6 +20,9 @@ on:
       - 'index.html'
       - '.github/workflows/android-apk.yml'
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-apk:
@@ -60,15 +65,44 @@ jobs:
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: Publicar APK
+      - name: Preparar APK com nome final
+        run: |
+          mkdir -p apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk apk/MAX-PERFORMANCE-v1.0.0-debug.apk
+          ls -lh apk
+
+      - name: Publicar como artifact
         uses: actions/upload-artifact@v4
         with:
           name: MAX-PERFORMANCE-debug-apk
-          path: android/app/build/outputs/apk/debug/*.apk
+          path: apk/MAX-PERFORMANCE-v1.0.0-debug.apk
           if-no-files-found: error
+
+      - name: Publicar no Release (link direto para baixar)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-latest
+          name: MAX PERFORMANCE 👑 — APK mais recente
+          body: |
+            APK debug do MAX PERFORMANCE 👑 gerado automaticamente a partir da branch `${{ github.ref_name }}` (commit `${{ github.sha }}`).
+
+            **Arquivo:** MAX-PERFORMANCE-v1.0.0-debug.apk
+
+            Para instalar no celular: baixe o APK, permita "instalar de fontes desconhecidas"
+            e, ao abrir o app, conceda a permissão "Sobrepor outros apps" para a bolinha
+            flutuante aparecer durante o Free Fire.
+          files: apk/MAX-PERFORMANCE-v1.0.0-debug.apk
+          fail_on_unmatched_files: true
 
       - name: Resumo
         run: |
           echo "### APK gerado ✅" >> $GITHUB_STEP_SUMMARY
-          echo "Baixe em **Artifacts → MAX-PERFORMANCE-debug-apk**." >> $GITHUB_STEP_SUMMARY
-          ls -la android/app/build/outputs/apk/debug/ >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Arquivo:** MAX-PERFORMANCE-v1.0.0-debug.apk" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Baixe em:" >> $GITHUB_STEP_SUMMARY
+          echo "- Release: https://github.com/${{ github.repository }}/releases/tag/apk-latest" >> $GITHUB_STEP_SUMMARY
+          echo "- Artifacts: MAX-PERFORMANCE-debug-apk" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Caminho no build: \`android/app/build/outputs/apk/debug/app-debug.apk\`" >> $GITHUB_STEP_SUMMARY
+          ls -la apk >> $GITHUB_STEP_SUMMARY
