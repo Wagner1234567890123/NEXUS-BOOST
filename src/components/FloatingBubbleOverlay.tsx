@@ -4,6 +4,7 @@ import {
   Crosshair,
   Eye,
   ExternalLink,
+  Gamepad2,
   Hand,
   Hexagon,
   PlusCircle,
@@ -15,6 +16,13 @@ import {
 } from 'lucide-react';
 import { AppSettingsState, FpsOption, PerformanceFlags } from '../types/app';
 import { RocketIcon } from './Icons';
+import {
+  disableGameOverlay,
+  enableGameOverlay,
+  getGameOverlayState,
+  isNativeAndroid,
+  GameOverlayState,
+} from '../utils/nativeOverlay';
 
 interface FloatingBubbleOverlayProps {
   visible: boolean;
@@ -51,6 +59,23 @@ export const FloatingBubbleOverlay: React.FC<FloatingBubbleOverlayProps> = ({
     y: typeof window !== 'undefined' ? Math.round(window.innerHeight * 0.38) : 220,
   }));
   const [isDragging, setIsDragging] = useState(false);
+  const [overlayState, setOverlayState] = useState<GameOverlayState>({
+    native: isNativeAndroid(),
+    granted: false,
+    running: false,
+  });
+  const [overlayBusy, setOverlayBusy] = useState(false);
+  const [overlayMsg, setOverlayMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    void getGameOverlayState().then((state) => {
+      if (alive) setOverlayState(state);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   const dragStateRef = useRef<{
     pointerId: number | null;
@@ -355,6 +380,41 @@ export const FloatingBubbleOverlay: React.FC<FloatingBubbleOverlayProps> = ({
               </div>
             ))}
           </div>
+
+          {/* Bolinha do sistema sobre o jogo (Android) */}
+          <button
+            type="button"
+            disabled={overlayBusy}
+            onClick={async () => {
+              setOverlayBusy(true);
+              const result = overlayState.running
+                ? await disableGameOverlay()
+                : await enableGameOverlay();
+              setOverlayMsg(result.message);
+              setOverlayState(await getGameOverlayState());
+              setOverlayBusy(false);
+            }}
+            className={`mb-1.5 w-full rounded-xl py-1.5 px-2 border text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-60 ${
+              overlayState.running
+                ? 'bg-green-900/50 border-green-500/80 text-green-200'
+                : 'bg-red-950/60 border-red-600/80 hover:bg-red-900/80 text-white'
+            }`}
+          >
+            <Gamepad2 className="w-3.5 h-3.5" />
+            <span>
+              {overlayState.running
+                ? 'Bolinha no jogo: ATIVA'
+                : overlayState.native
+                  ? 'Ativar bolinha no jogo'
+                  : 'Bolinha no jogo (APK)'}
+            </span>
+          </button>
+
+          {overlayMsg && (
+            <div className="mb-1.5 rounded-lg bg-black/60 border border-red-900/70 px-2 py-1 text-[10px] leading-snug text-white/85">
+              {overlayMsg}
+            </div>
+          )}
 
           {/* Perfis por modelo */}
           {onOpenProfiles && (
