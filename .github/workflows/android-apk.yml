@@ -1,0 +1,74 @@
+name: Build Android APK
+
+# Gera o APK do MAX PERFORMANCE (Capacitor + overlay nativo).
+# Rode pela aba Actions -> "Build Android APK" -> Run workflow,
+# ou automaticamente a cada push na branch max-performance.
+# O APK fica em Artifacts -> MAX-PERFORMANCE-debug-apk.
+
+on:
+  push:
+    branches: [max-performance]
+    paths:
+      - 'src/**'
+      - 'android/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'capacitor.config.ts'
+      - 'vite.config.*'
+      - 'index.html'
+      - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    name: Compilar APK (debug)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Dependências web
+        run: npm ci
+
+      - name: Build web (dist)
+        run: npm run build
+
+      - name: Sincronizar Capacitor (android)
+        run: npx cap sync android
+
+      - name: Permissão do Gradle
+        run: chmod +x android/gradlew
+
+      - name: Compilar APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Publicar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MAX-PERFORMANCE-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Resumo
+        run: |
+          echo "### APK gerado ✅" >> $GITHUB_STEP_SUMMARY
+          echo "Baixe em **Artifacts → MAX-PERFORMANCE-debug-apk**." >> $GITHUB_STEP_SUMMARY
+          ls -la android/app/build/outputs/apk/debug/ >> $GITHUB_STEP_SUMMARY
