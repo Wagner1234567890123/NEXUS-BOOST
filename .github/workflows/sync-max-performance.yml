@@ -1,0 +1,44 @@
+name: Sync max-performance
+
+# Leva as alterações da branch de trabalho "appjet" para a branch "max-performance"
+# do repositório NEXUS-BOOST, por fast-forward (preserva todo o histórico e os
+# arquivos existentes de max-performance; nada é apagado ou reescrito).
+#
+# Roda automaticamente quando este arquivo entra em appjet, e também pode ser
+# disparado manualmente em Actions -> "Sync max-performance" -> Run workflow.
+
+on:
+  push:
+    branches: [appjet]
+    paths:
+      - '.github/workflows/sync-max-performance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fast-forward:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout de appjet (histórico completo)
+        uses: actions/checkout@v4
+        with:
+          ref: appjet
+          fetch-depth: 0
+
+      - name: Fast-forward de max-performance para o commit de appjet
+        run: |
+          set -e
+          git config user.name "AppJet"
+          git config user.email "appjet@users.noreply.github.com"
+          git fetch origin max-performance
+          echo "appjet:          $(git rev-parse HEAD)"
+          echo "max-performance: $(git rev-parse origin/max-performance)"
+          if git merge-base --is-ancestor origin/max-performance HEAD; then
+            git push origin HEAD:max-performance
+            echo "OK: max-performance atualizada por fast-forward para $(git rev-parse HEAD)"
+          else
+            echo "::error::max-performance tem commits que não existem em appjet (não é fast-forward). Nada foi alterado; faça o merge manualmente."
+            exit 1
+          fi
