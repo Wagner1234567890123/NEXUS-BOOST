@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-display: 'Barlow Condensed', system-ui, sans-serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #040102;
+    color: #ffffff;
+    overflow-x: hidden;
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle diagonal cyber-circuit pattern matching the 6 screens */
+.nexus-bg-pattern {
+  background-color: #050102;
+  background-image:
+    radial-gradient(circle at 50% 25%, rgba(190, 12, 18, 0.24) 0%, rgba(70, 4, 8, 0.14) 45%, rgba(5, 1, 2, 0.98) 85%),
+    repeating-linear-gradient(
+      -35deg,
+      rgba(255, 25, 25, 0.035) 0px,
+      rgba(255, 25, 25, 0.035) 1px,
+      transparent 1px,
+      transparent 18px
+    ),
+    repeating-linear-gradient(
+      35deg,
+      rgba(255, 25, 25, 0.025) 0px,
+      rgba(255, 25, 25, 0.025) 1px,
+      transparent 1px,
+      transparent 24px
+    );
+}
+
+/* Outer glowing crimson phone border */
+.nexus-frame-border {
+  border: 2.5px solid #ff1e1e;
+  box-shadow:
+    0 0 22px rgba(255, 20, 20, 0.55),
+    0 0 6px rgba(255, 60, 60, 0.65),
+    inset 0 0 18px rgba(255, 15, 15, 0.28);
+}
+
+/* Glowing crimson primary button */
+.nexus-red-cta {
+  background: linear-gradient(180deg, #680000 0%, #c80000 45%, #8a0000 100%);
+  border: 1.5px solid #ff4545;
+  box-shadow:
+    0 0 18px rgba(255, 24, 24, 0.65),
+    inset 0 1px 6px rgba(255, 140, 140, 0.35),
+    inset 0 -3px 8px rgba(60, 0, 0, 0.8);
+}
+
+.nexus-red-cta:hover {
+  filter: brightness(1.08);
+}
+
+.nexus-red-cta:active {
+  transform: scale(0.985);
+}
+
+/* Green status bar pill */
+.nexus-green-pill {
+  background: linear-gradient(180deg, #063818 0%, #095825 50%, #042811 100%);
+  border: 1.5px solid #22c55e;
+  box-shadow:
+    0 0 14px rgba(34, 197, 94, 0.45),
+    inset 0 1px 4px rgba(134, 239, 172, 0.22);
+}
+
+/* Dark crimson panel/card */
+.nexus-card {
+  background: linear-gradient(180deg, rgba(28, 4, 6, 0.92) 0%, rgba(12, 2, 3, 0.96) 100%);
+  border: 1.25px solid rgba(215, 25, 25, 0.82);
+  box-shadow:
+    0 0 10px rgba(220, 20, 20, 0.22),
+    inset 0 0 12px rgba(180, 10, 10, 0.14);
+}
+
+.nexus-card-interactive {
+  background: linear-gradient(180deg, rgba(38, 5, 8, 0.92) 0%, rgba(14, 2, 4, 0.96) 100%);
+  border: 1.35px solid #d91c1c;
+  box-shadow:
+    0 0 12px rgba(235, 20, 20, 0.28),
+    inset 0 0 10px rgba(180, 10, 10, 0.18);
+  transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.nexus-card-interactive:hover {
+  border-color: #ff3b3b;
+  box-shadow:
+    0 0 16px rgba(255, 30, 30, 0.45),
+    inset 0 0 12px rgba(220, 20, 20, 0.25);
+}
+
+.nexus-card-interactive:active {
+  transform: scale(0.985);
+}
+
+/* Yellow/gold banner */
+.nexus-gold-banner {
+  background: linear-gradient(180deg, rgba(36, 26, 4, 0.95) 0%, rgba(18, 12, 2, 0.98) 100%);
+  border: 1.5px solid #ca9612;
+  box-shadow: 0 0 12px rgba(234, 179, 8, 0.26);
+}
+
+/* Custom Range Slider matching Screens 3 & 4 */
+input[type='range'].nexus-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 22px;
+}
+
+input[type='range'].nexus-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 9999px;
+  border: 1px solid rgba(185, 28, 28, 0.55);
+}
+
+input[type='range'].nexus-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 35%, #ff6b6b 0%, #ef1414 60%, #990000 100%);
+  border: 1.5px solid #ff9999;
+  box-shadow: 0 0 10px rgba(255, 25, 25, 0.95);
+  margin-top: -5px;
+  transition: transform 120ms ease;
+}
+
+input[type='range'].nexus-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+input[type='range'].nexus-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 9999px;
+  border: 1px solid rgba(185, 28, 28, 0.55);
+}
+
+input[type='range'].nexus-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 35%, #ff6b6b 0%, #ef1414 60%, #990000 100%);
+  border: 1.5px solid #ff9999;
+  box-shadow: 0 0 10px rgba(255, 25, 25, 0.95);
+}
+
+/* Subtle flame ring pulse for Screen 2 */
+@keyframes flamePulse {
+  0%, 100% {
+    box-shadow: 0 0 18px rgba(255, 40, 0, 0.8), 0 0 34px rgba(255, 100, 0, 0.45), inset 0 0 18px rgba(255, 30, 0, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(255, 60, 0, 0.95), 0 0 42px rgba(255, 130, 0, 0.6), inset 0 0 22px rgba(255, 50, 0, 0.7);
+  }
+}
+
+.fps-flame-ring {
+  animation: flamePulse 2.4s ease-in-out infinite;
+}
+
+/* Slow-motion ghost figure drift for Screen 4 */
+@keyframes slowWalkLead {
+  0%, 100% { transform: translateX(0px); }
+  50% { transform: translateX(4px); }
+}
+
+@keyframes slowWalkEcho {
+  0%, 100% { transform: translateX(0px); opacity: 0.72; }
+  50% { transform: translateX(-3px); opacity: 0.48; }
+}
+
+.walk-lead-anim {
+  animation: slowWalkLead 2.2s ease-in-out infinite;
+}
+
+.walk-echo-anim {
+  animation: slowWalkEcho 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fps-flame-ring,
+  .walk-lead-anim,
+  .walk-echo-anim {
+    animation: none;
+  }
+}
+
+/* Hide scrollbars inside phone screen while keeping scrollability */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
