@@ -266,7 +266,7 @@ export default function App() {
     setSettings((prev) => ({ ...prev, gpuHighPerf: !prev.gpuHighPerf }));
   };
 
-  const handleTogglePerformanceFlagOld = (key: keyof PerformanceFlags) => {
+  const handleTogglePerformanceFlag = (key: keyof PerformanceFlags) => {
     setSettings((prev) => ({
       ...prev,
       performanceFlags: {
@@ -410,6 +410,7 @@ export default function App() {
             onSelectBrand={(brand: BrandId) =>
               setSettings((prev) => ({ ...prev, selectedBrand: brand }))
             }
+            onOpenModelSelector={() => setProfilesOpen(true)}
             onGenerateNow={handleGenerateNow}
             onToggleFlag={handleTogglePerformanceFlag}
             onBack={() => setActiveScreen('sensitivity')}
@@ -420,6 +421,9 @@ export default function App() {
           <MoreFunctionsScreen
             economyMode={settings.economyMode}
             gpuHighPerf={settings.gpuHighPerf}
+            bubbleEnabled={settings.bubbleEnabled}
+            onToggleBubble={handleToggleBubble}
+            onOpenProfiles={() => setProfilesOpen(true)}
             onRunAction={handleMoreAction}
             onOpenPremium={() => setDrawerMode('premium')}
             onClearGameData={handleClearGameData}
@@ -530,6 +534,42 @@ export default function App() {
           {toast}
         </div>
       )}
+
+      {/* Bolinha Flutuante MAX PERFORMANCE — permanece visível durante o jogo */}
+      <FloatingBubbleOverlay
+        visible={settings.bubbleEnabled}
+        settings={settings}
+        onTogglePerformanceFlag={handleTogglePerformanceFlag}
+        onToggleSlowWalk={handleToggleSlowWalk}
+        onToggleEconomy={handleToggleEconomy}
+        onToggleGpuHighPerf={handleToggleGpu}
+        onSelectFps={(fps: FpsOption) =>
+          setSettings((prev) => ({ ...prev, selectedFps: fps }))
+        }
+        onCleanMemory={() => {
+          void handleMoreAction('memory');
+        }}
+        onDeactivateBoost={() => {
+          setSettings((prev) => ({ ...prev, boostActive: false }));
+          showToast('Boost desativado pelo painel flutuante.');
+        }}
+        onHideBubble={handleToggleBubble}
+        onOpenProfiles={() => setProfilesOpen(true)}
+      />
+
+      {/* Perfis de sensibilidade por marca e modelo */}
+      <SensitivityProfilesModal
+        open={profilesOpen}
+        onClose={() => setProfilesOpen(false)}
+        capabilities={capabilities}
+        selectedBrand={settings.selectedBrand}
+        selectedModelId={settings.selectedModelId}
+        activeProfileId={settings.activeProfileId}
+        onSelectBrand={(brand: BrandId) =>
+          setSettings((prev) => ({ ...prev, selectedBrand: brand }))
+        }
+        onApplyProfile={handleApplyProfile}
+      />
 
       {/* Real Device Info / Premium Tools Drawer */}
       <InfoDrawer
