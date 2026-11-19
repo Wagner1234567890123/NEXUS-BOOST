@@ -62,6 +62,31 @@ export interface PhoneModelProfile {
   isCustom?: boolean;
 }
 
+export type ProfileStyleId =
+  | 'equilibrado'
+  | 'rush'
+  | 'precisao'
+  | 'quatro-dedos'
+  | 'capa-rapida'
+  | 'anti-tremor';
+
+export interface SensitivityProfile {
+  id: string;
+  styleId: ProfileStyleId;
+  name: string;
+  playStyle: string;
+  description: string;
+  sensitivity: SensitivityValues;
+  dpi: number;
+  fireButtonSize: number;
+  recommended: boolean;
+}
+
+export interface ModelProfileBundle {
+  model: PhoneModelProfile;
+  profiles: SensitivityProfile[];
+}
+
 export interface AppSettingsState {
   boostActive: boolean;
   selectedFps: FpsOption;
@@ -75,4 +100,6 @@ export interface AppSettingsState {
   performanceFlags: PerformanceFlags;
   economyMode: boolean;
   gpuHighPerf: boolean;
+  activeProfileId: string;
+  bubbleEnabled: boolean;
 }
