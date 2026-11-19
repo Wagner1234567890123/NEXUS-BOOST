@@ -33,6 +33,9 @@ interface MoreFunctionsScreenProps {
 export const MoreFunctionsScreen: React.FC<MoreFunctionsScreenProps> = ({
   economyMode,
   gpuHighPerf,
+  bubbleEnabled = true,
+  onToggleBubble,
+  onOpenProfiles,
   onRunAction,
   onOpenPremium,
   onClearGameData,
@@ -154,6 +157,62 @@ export const MoreFunctionsScreen: React.FC<MoreFunctionsScreenProps> = ({
             <ChevronRight className="w-5 h-5 text-[#ff2929] stroke-[2.8] shrink-0" />
           </button>
         ))}
+      </div>
+
+      {/* Bolinha flutuante + perfis por modelo */}
+      <div className="flex flex-col gap-2">
+        <button
+          type="button"
+          onClick={onToggleBubble}
+          aria-pressed={bubbleEnabled}
+          data-testid="more-bubble-toggle"
+          className="nexus-card-interactive rounded-2xl px-3 py-2 flex items-center justify-between gap-2.5 text-left cursor-pointer min-h-[54px]"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg border border-[#ff2e2e]/70 bg-[#2b0404] flex items-center justify-center text-[#ff2929]">
+              <Hexagon className="w-5 h-5" />
+            </div>
+            <div className="min-w-0 leading-tight">
+              <div className="text-[13.5px] font-bold text-white truncate">
+                Bolinha Flutuante no Jogo
+              </div>
+              <div className="text-[11px] text-white/80 truncate mt-0.5">
+                {bubbleEnabled ? 'Ativa sobre o Free Fire' : 'Desativada'}
+              </div>
+            </div>
+          </div>
+          <span
+            className={`w-[38px] h-[20px] rounded-full p-0.5 flex items-center shrink-0 ${
+              bubbleEnabled
+                ? 'bg-[#e11d1d] justify-end shadow-[0_0_8px_rgba(239,68,68,0.65)]'
+                : 'bg-zinc-800 border border-red-900 justify-start'
+            }`}
+          >
+            <span className="w-[15px] h-[15px] rounded-full bg-white block" />
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onOpenProfiles}
+          data-testid="more-open-profiles"
+          className="nexus-card-interactive rounded-2xl px-3 py-2 flex items-center justify-between gap-2.5 text-left cursor-pointer min-h-[54px]"
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg border border-[#ff2e2e]/70 bg-[#2b0404] flex items-center justify-center text-[#ff2929]">
+              <Star className="w-5 h-5" />
+            </div>
+            <div className="min-w-0 leading-tight">
+              <div className="text-[13.5px] font-bold text-white truncate">
+                Perfis por Marca e Modelo
+              </div>
+              <div className="text-[11px] text-white/80 truncate mt-0.5">
+                Vários perfis de sensibilidade por aparelho
+              </div>
+            </div>
+          </div>
+          <ChevronRight className="w-5 h-5 text-[#ff2929] stroke-[2.8] shrink-0" />
+        </button>
       </div>
 
       {/* Gold Premium Banner */}
