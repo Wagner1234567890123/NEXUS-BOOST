@@ -29,6 +29,9 @@ import {
   MoreFunctionsScreen,
 } from './components/screens/MoreFunctionsScreen';
 import { InfoDrawer } from './components/InfoDrawer';
+import { FloatingBubbleOverlay } from './components/FloatingBubbleOverlay';
+import { SensitivityProfilesModal } from './components/SensitivityProfilesModal';
+import { PhoneModelProfile, SensitivityProfile } from './types/app';
 
 const STORAGE_KEY = 'max_performance_nexus_settings_v1';
 
@@ -50,6 +53,9 @@ const INITIAL_SETTINGS: AppSettingsState = {
   },
   economyMode: false,
   gpuHighPerf: true,
+  selectedModelId: 'motorola-moto-g04s',
+  activeProfileId: 'motorola-moto-g04s::equilibrado',
+  bubbleEnabled: true,
 };
 
 function loadSavedSettings(): AppSettingsState {
@@ -89,6 +95,7 @@ export default function App() {
   const [settings, setSettings] = useState<AppSettingsState>(loadSavedSettings);
   const [capabilities, setCapabilities] = useState<DeviceCapabilities | null>(null);
   const [drawerMode, setDrawerMode] = useState<'shizuku' | 'premium' | null>(null);
+  const [profilesOpen, setProfilesOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
@@ -223,8 +230,7 @@ export default function App() {
     showToast(`Sensibilidade calibrada para ${BRAND_METADATA[settings.selectedBrand].label}!`);
   };
 
-  const handleTogglePerformanceFlag = (key: keyof PerformanceFlags) => {
-    setSettings((prev) => ({
+  const handleTogglePerformanceFlag = (key: keyof PerformanceFlags) => {    setSettings((prev) => ({
       ...prev,
       performanceFlags: {
         ...prev.performanceFlags,
